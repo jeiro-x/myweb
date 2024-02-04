@@ -1,0 +1,8 @@
+media
+**/*.pyc
+ec2.txt
+.vscode/
+platzigram/settings.py
+.env
+.DS*
+appspec.yml
