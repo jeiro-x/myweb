@@ -6,5 +6,14 @@
 <body>
     <h1>Mi Aplicación</h1>
     Hola, esta es mi aplicación.
+    <h2>Crear Persona</h2>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+    <br>
+    <a href="{% url 'lista_personas' %}">Ver Lista de Personas</a>
 </body>
 </html>
