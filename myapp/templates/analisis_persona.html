@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejemplo de LitElement</title>
+</head>
+<body>
+  <style>
+    body{
+      background: #34495E;
+    }
+    #myform {
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    input[type=text], input[type=email], input[type=number] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box; /* Garantiza que el padding no afecte al ancho del campo */
+    }
+    .btn1 {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .btn1:hover {
+      background-color: #45a049;
+    }
+    .btn{
+      color:white; background:orange; padding: 10px 20px;border: none; border-radius: 5px
+    }
+  </style>
+  <!-- --------------------------------------------- -->
+  <h1>Hola, este será mi formulario</h1>
+
+  <mi-componente></mi-componente>
+  
+  <form id="myform" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn1" type="submit">Guardar</button>
+  </form>
+
+  <br>
+  <h1>Última persona registrada</h1>
+  <h3>Nombre: {{ nombre }}</h3>
+  <h3>Edad: {{ edad }}</h3>
+  <h3>Correo: {{ correo }}</h3>
+  <br>
+
+  <h2>Formulario numero 2 con Componentes</h2>
+
+  <form-content>
+    <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input-view
+    label="Nombre:"
+    value="agario"
+    name="nombre">
+    </input-view>
+    <input-view
+    label="Edad:"
+    value="26"
+    name="edad">
+    </input-view>
+    <input-view
+    label="Correo:"
+    value="agar@gamail.com"
+    name="correo">
+    </input-view>
+    <button type="submit" class="btn">Guardar</button>
+    </form>
+  </form-content>
+  <br>
+  <br>
+  <script type="module" src="static/scripts/components/first-component.js"></script>
+</body>
+</html>

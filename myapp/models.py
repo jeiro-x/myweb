@@ -1,66 +1,5 @@
 from django.db import models
 
-# Create your models here.
-# class RegistroExcavacionDelimitacion(models.Model):
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-
-#     class Meta:
-#         verbose_name = "Excavacion Delimitacion - Registro"
-#         verbose_name_plural = "Excavacion Delimitacion - Registro"
-#         ordering = ['-id']
-
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-#     #Datos generales
-#     proyecto_nombre = models.CharField(max_length=255,null=True, blank=True)
-#     nombre_bien_arqueologico = models.CharField(max_length=255,null=True, blank=True)
-#     otros_nombres = models.CharField(max_length=255,null=True, blank=True)
-#     is_active = models.BooleanField(default=True, null=True)
-#     is_valid = models.BooleanField(default=True, null=True)
-#     fecha = models.DateField(auto_now_add=False, blank=True, null=True)
-
-#     validado = models.BooleanField(default=False)
-
-#     # Auditoria
-#     activo = models.BooleanField(default=True, null=True)
-#     eliminado_fecha = models.DateField(auto_now=False, blank=True, null=True)
-
-#     #METODOS DE INSTANCIA
-#     def unidades(self):
-#         detalle = self.unidadexcavacion_set.all()
-#         return detalle
-    
-#     def capas(self):
-#         detalle = self.capaexcavacion_set.all()
-#         return detalle
-
-#     def registrofotografico(self):
-#         detalle = self.registrofotograficoexcavacion_set.all().reverse()
-#         return detalle
-
-#     def max_id_fotografico(self):
-#         detalle = self.registrofotograficoexcavacion_set.all().order_by('id').last()
-#         return detalle.id if detalle else 0
-
-#     def registrografico(self):
-#         detalle = self.registrograficoexcavacion_set.all().reverse()
-#         return detalle
-
-#     def max_id_grafico(self):
-#         detalle = self.registrograficoexcavacion_set.all().order_by('id').last()
-#         return detalle.id if detalle else 0
-    
-#     def fotos_graficos(self):
-#         detalle = self.registrograficoexcavacion_set.all().order_by('id')
-#         return detalle
-    
-#     def fotos_fotograficos(self):
-#         detalle = self.registrofotograficoexcavacion_set.all().order_by('id')
-#         return detalle
-
-
 # MIS MODELO
 class Direccion(models.Model):
     calle = models.CharField(max_length=100)
@@ -111,3 +50,41 @@ class Empleado(models.Model):
     def saludo_empleado(self):
     	return f"este hola es para la genta, saludos {self.nombre} tu id es {self.id}"
 
+
+
+# MODELOS CON CONVECCIONES MÁS AVANZADAS Y SUBCLASE.
+class Autor(models.Model):
+    model = 'AutorDeAlgunLibro'# ESTO LITERALMENTE NO HACE NADA. 
+
+    nombre = models.CharField(max_length=255)
+    apellido = models.CharField(max_length=255)
+    dni = models.IntegerField()
+
+    def __str__(self):
+        return self.nombre
+
+# ESTO ES UNA CLASE BASE POR QUE TIENE abstract = True
+class Libro(models.Model):
+    titulo = models.CharField(max_length=255)
+    autor = models.CharField(max_length=255)
+    editorial = models.CharField(max_length=255)
+    fecha_publicacion = models.DateField()
+
+    class Meta:
+        abstract = True # ESTO ESTABLECE QUE EL MODELO SEA UNA CLASE BASE
+        verbose_name = "Libro"
+        verbose_name_plural = "Libros"
+        ordering = ['id']# ORDENA LOS DATOS SEGUN EL ID
+
+    def __str__(self):
+        return f"{self.titulo} - {self.autor}"
+
+class LibroDigital(Libro):
+    formato = models.CharField(max_length=50)
+    tamano = models.CharField(max_length=50)
+    url_descarga = models.URLField()
+    autor_adicional = models.ForeignKey(Autor, on_delete=models.CASCADE, related_name='libros_digitales')
+
+    class Meta:
+        verbose_name = "Libro Digital"
+        verbose_name_plural = "Libros Digitales"
