@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import PersonaForm
-from .models import Persona
+from .forms import PersonaForm, FotograficoForm
+from .models import Persona, camareografo
 from django.urls import reverse, reverse_lazy
 # from . import views
 
@@ -96,3 +96,31 @@ class UltimaPersonaView(CreateView):
 #     model = Persona
 #     template_name = 'gestion_personas.html'
 #     context_object_name = 'personas'
+
+
+class fotografico_view(CreateView):
+	# ESTOS SON ATRIBUTOS
+	model = camareografo
+	form_class = FotograficoForm
+	template_name = 'fotografico.html'
+	success_url = reverse_lazy('n_fotografico')
+
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+# from html2pdf import HTML2PDF
+def exportar_pdf(request):
+	# Obtener el template HTML
+    template = get_template('mi_export_pdf.html')
+    html = template.render()
+
+   	# Crear un archivo PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="mi_archivo.pdf"'
+
+    # Convertir HTML a PDF
+    pisaStatus = pisa.CreatePDF(html, dest=response)
+
+    # Si todo salió bien, devolver el PDF
+    if pisaStatus.err:
+        return HttpResponse('Hubo un error al generar el PDF')
+    return response

@@ -1,4 +1,5 @@
 from django.db import models
+import myapp.paths as path
 
 # MIS MODELO
 class Direccion(models.Model):
@@ -88,3 +89,47 @@ class LibroDigital(Libro):
     class Meta:
         verbose_name = "Libro Digital"
         verbose_name_plural = "Libros Digitales"
+
+# IMAGES ---------------------------------------------
+class camareografo(models.Model):
+    nombre = models.CharField(max_length=100)
+    edad = models.IntegerField()
+    correo = models.EmailField()
+
+    class Meta:
+        verbose_name = "El Camareografo"
+        verbose_name_plural = "Los Camareografos"
+        ordering = ['-id']
+
+    def max_id_fotografico(self):
+        detalle = self.RegistroFotografico_set.all().order_by('id').last()
+        return detalle.id if detalle else 0
+    
+    def fotos_fotograficos(self):
+        detalle = self.RegistroFotografico_set.all().order_by('id')
+        return detalle
+
+
+class fotografico(models.Model):
+    class Meta:
+        abstract = True
+        ordering = ['-id']
+
+    foto_descripcion=models.TextField(blank=True,null=True)
+    foto_orientacion=models.CharField(
+        max_length=255,
+        null=True, blank=True,
+        default='-')
+
+    def __str__(self):
+        return f"La descripcion es: {self.foto_descripcion}"
+
+class RegistroFotografico(fotografico):
+    model = 'RegistroFotografico'
+    class Meta:
+        verbose_name = "Foto - Registro fotografico"
+        verbose_name_plural = "Fotos - Registros fotograficos"
+        ordering = ['-id']
+    
+    id_camareografo = models.ForeignKey(camareografo, on_delete=models.CASCADE)
+    foto_imagen = models.ImageField(upload_to=path.get_registro_fotografico_path, blank=True, null=True, max_length = 500)
